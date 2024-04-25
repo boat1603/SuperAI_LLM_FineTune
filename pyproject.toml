@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=40.8.0", "wheel"]
+
+[project]
+name = "llm_finetune"
+version = "0.1.0"
+description = "finetune code baseline for SuperEngineerSS4"
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = ["Programming Language :: Python :: 3"]
+dependencies = [
+    "sentencepiece",
+    "transformers",
+    "datasets",
+    "hydra-core",
+    "protobuf",
+    "torch",
+    "deepspeed",
+    "accelerate",
+    "wandb",
+]
