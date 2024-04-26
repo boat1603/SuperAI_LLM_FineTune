@@ -11,7 +11,7 @@ module load cudatoolkit/22.7_11.7
 module load gcc/10.3.0
 
 conda deactivate
-conda activate ../env
+conda activate ./env
 
 echo myuser=`whoami`
 echo COUNT_NODE=$COUNT_NODE
@@ -40,9 +40,10 @@ accelerate launch \
     --machine_rank $SLURM_PROCID \
     --main_process_ip $MASTER_ADDR \
     --main_process_port $MASTER_PORT \
-    train.py \
-        --model_name_or_path new5558/tinyllama_1b-200000 \
-        --train_data_path ../example/sample_data.json \
+    scripts/train.py \
+        --model_name_or_path /project/lt900048-ai24tn/models/new5558/tinyllama_1b-200000 \
+        --train_data_path ./example/sample_train_data.json \
+        --eval_data_path ./example/sample_eval_data.json \
         --data_seed 42 \
         --model_max_length 2048 \
         --bf16 True \
