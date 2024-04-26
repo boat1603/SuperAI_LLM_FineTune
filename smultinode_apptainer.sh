@@ -64,6 +64,5 @@ apptainer exec --nv \
             --weight_decay 0. \
             --warmup_ratio 0.03 \
             --deepspeed /app/deepspeed_config/deepspeed_3.json \
-            --gradient_checkpointing True \
             --tf32 True \
             # --checkpoint ...
