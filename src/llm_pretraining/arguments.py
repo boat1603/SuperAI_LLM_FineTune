@@ -1,7 +1,7 @@
 import transformers
 
 from dataclasses import dataclass, field
-from typing import Optional
+from typing import Optional, Union
 
 
 @dataclass
@@ -15,7 +15,7 @@ class DataArguments:
         default=None, metadata={"help": "Path to the training data."}
     )
     eval_data_path: str = field(
-        default=None, metadata={"help": "Path to the training data."}
+        default=None, metadata={"help": "Path to the eval data."}
     )
 
 
@@ -28,5 +28,11 @@ class TrainingArguments(transformers.TrainingArguments):
         default=512,
         metadata={
             "help": "Maximum sequence length. Sequences will be right padded (and possibly truncated)."  # noqa: E501
+        },
+    )
+    gradient_checkpointing_kwargs: Optional[Union[dict, str]] = field(
+        default_factory={"use_reentrant": False}.copy,
+        metadata={
+            "help": "Gradient checkpointing key word arguments such as `use_reentrant`. Will be passed to `torch.utils.checkpoint.checkpoint` through `model.gradient_checkpointing_enable`."
         },
     )
