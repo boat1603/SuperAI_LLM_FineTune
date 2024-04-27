@@ -1,12 +1,12 @@
 import transformers
 from transformers import Trainer
 
-from llm_pretraining.arguments import (
+from llm_finetune.arguments import (
     ModelArguments,
     DataArguments,
     TrainingArguments,
 )
-from llm_pretraining.dataset import make_supervised_data_module
+from llm_finetune.dataset import make_supervised_data_module
 
 
 def train():
