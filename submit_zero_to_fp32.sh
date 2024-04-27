@@ -12,6 +12,6 @@ ml Mamba
 conda deactivate
 conda activate ../env
 
-python zero_to_fp32.py \
+python ./scripts/zero_to_fp32.py \
     <checkpoint_path> \
     <checkpoint_path>/pytorch_model.bin
