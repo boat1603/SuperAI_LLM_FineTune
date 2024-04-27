@@ -10,7 +10,7 @@
 
 ml Mamba
 conda deactivate
-conda activate ../env
+conda activate ./env
 
 python ./scripts/zero_to_fp32.py \
     <checkpoint_path> \
