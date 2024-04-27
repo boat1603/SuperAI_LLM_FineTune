@@ -29,7 +29,7 @@ export NCCL_BLOCKING_WAIT=0
 
 apptainer exec --nv \
     -B $PWD:$PWD \
-    -B ${PWD}/src/llm_pretraining:/app/src/llm_pretraining \
+    -B ${PWD}/src/llm_finetune:/app/src/llm_finetune \
     -B ${PWD}/checkpoint:/app/checkpoint \
     -B ${PWD}/deepspeed_config:/app/deepspeed_config \
     -B ${PWD}/scripts:/app/scripts \
