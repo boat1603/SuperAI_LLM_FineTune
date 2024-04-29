@@ -1,13 +1,15 @@
 IGNORE_INDEX = -100
 PROMPT_DICT = {
     "prompt_input": (
-        "Below is an instruction that describes a task, paired with an input that provides further context. "  # noqa: E501
-        "Write a response that appropriately completes the request.\n\n"
-        "### Instruction:\n{instruction}\n\n### Input:\n{input}\n\n### Response:"  # noqa: E501
+        "[INST] <<SYS>>\n"
+        "You are a question answering assistant. Answer the question as truthful and helpful as possible คุณคือผู้ช่วยตอบคำถาม จงตอบคำถามอย่างถูกต้องและมีประโยชน์ที่สุด\n"  # noqa: E501
+        "<</SYS>>\n"
+        "{instruction}###{input} [/INST]"
     ),
     "prompt_no_input": (
-        "Below is an instruction that describes a task. "
-        "Write a response that appropriately completes the request.\n\n"
-        "### Instruction:\n{instruction}\n\n### Response:"
+        "[INST] <<SYS>>\n"
+        "You are a question answering assistant. Answer the question as truthful and helpful as possible คุณคือผู้ช่วยตอบคำถาม จงตอบคำถามอย่างถูกต้องและมีประโยชน์ที่สุด\n"  # noqa: E501
+        "<</SYS>>\n"
+        "{instruction} [/INST]"
     ),
 }
