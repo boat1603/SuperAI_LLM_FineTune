@@ -3,6 +3,7 @@ from datasets import load_dataset
 
 from typing import Dict
 import copy
+import os
 
 from .data_collator import DataCollatorForSupervisedDataset
 from .constant import PROMPT_DICT, IGNORE_INDEX
@@ -36,7 +37,7 @@ def preprocess(tokenizer):
 
 def load_data(path, tokenizer):
     dataset = load_dataset("json", data_files=path)["train"]
-    dataset = dataset.map(preprocess(tokenizer))
+    dataset = dataset.map(preprocess(tokenizer), num_proc=os.cpu_count())
 
     return dataset
 
