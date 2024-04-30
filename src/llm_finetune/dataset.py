@@ -1,74 +1,54 @@
 import transformers
-import torch
-from torch.utils.data import Dataset
+from datasets import load_dataset
 
 from typing import Dict
-import logging
+import copy
 
 from .data_collator import DataCollatorForSupervisedDataset
-from .constant import PROMPT_DICT
-from .tokenize import preprocess
-from . import utils
+from .constant import PROMPT_DICT, IGNORE_INDEX
+from .tokenize import _tokenize_fn
 
 
-class SupervisedDataset(Dataset):
-    """Dataset for supervised fine-tuning."""
-
-    def __init__(
-        self,
-        data_path: str,
-        tokenizer: transformers.PreTrainedTokenizer,
-    ):
-        super(SupervisedDataset, self).__init__()
-        logging.warning("Loading data...")
-        list_data_dict = utils.jload(data_path)
-
-        logging.warning("Formatting inputs...")
-        prompt_input, prompt_no_input = (
-            PROMPT_DICT["prompt_input"],
-            PROMPT_DICT["prompt_no_input"],
+def preprocess(tokenizer):
+    def _preprocess(sample):
+        source = (
+            PROMPT_DICT["prompt_input"].format_map(sample)
+            if sample.get("input", "") != ""
+            else PROMPT_DICT["prompt_no_input"].format_map(sample)
         )
-        sources = [
-            (
-                prompt_input.format_map(example)
-                if example.get("input", "") != ""
-                else prompt_no_input.format_map(example)
-            )
-            for example in list_data_dict
-        ]
-        targets = [
-            f"{example['output']}{tokenizer.eos_token}"
-            for example in list_data_dict  # noqa: E501
-        ]
+        target = f"{sample['output']}{tokenizer.eos_token}"
 
-        logging.warning("Tokenizing inputs... This may take some time...")
-        data_dict = preprocess(sources, targets, tokenizer)
+        example = source + target
 
-        self.input_ids = data_dict["input_ids"]
-        self.labels = data_dict["labels"]
+        example_tokenized = _tokenize_fn(example, tokenizer)
+        source_tokenized = _tokenize_fn(source, tokenizer)
 
-    def __len__(self):
-        return len(self.input_ids)
-
-    def __getitem__(self, i) -> Dict[str, torch.Tensor]:
+        input_ids = example_tokenized["input_ids"]
+        label = copy.deepcopy(input_ids)
+        label[: source_tokenized["input_ids_lens"]] = IGNORE_INDEX
         return dict(
-            input_ids=self.input_ids[i],
-            labels=self.labels[i],
+            input_ids=input_ids,
+            labels=label,
         )
+
+    return _preprocess
+
+
+def load_data(path, tokenizer):
+    dataset = load_dataset("json", data_files=path)["train"]
+    dataset = dataset.map(preprocess(tokenizer))
+
+    return dataset
 
 
 def make_supervised_data_module(
     tokenizer: transformers.PreTrainedTokenizer, data_args
 ) -> Dict:
     """Make dataset and collator for supervised fine-tuning."""
-    train_dataset = SupervisedDataset(
-        tokenizer=tokenizer, data_path=data_args.train_data_path
-    )
+    train_dataset = load_data(data_args.train_data_path, tokenizer=tokenizer)
     eval_dataset = None
     if data_args.eval_data_path:
-        eval_dataset = SupervisedDataset(
-            tokenizer=tokenizer, data_path=data_args.eval_data_path
-        )
+        eval_dataset = load_data(data_args.eval_data_path, tokenizer=tokenizer)
     data_collator = DataCollatorForSupervisedDataset(tokenizer=tokenizer)
     return dict(
         train_dataset=train_dataset,
