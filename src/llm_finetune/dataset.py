@@ -16,7 +16,7 @@ def preprocess(tokenizer):
             if sample.get("input", "") != ""
             else PROMPT_DICT["prompt_no_input"].format_map(sample)
         )
-        target = f"{sample['output']}{tokenizer.eos_token}"
+        target = f"{sample['answer']}{tokenizer.eos_token}"
 
         example = source + target
 

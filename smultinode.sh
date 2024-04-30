@@ -42,8 +42,8 @@ accelerate launch \
     --main_process_port $MASTER_PORT \
     scripts/train.py \
         --model_name_or_path /project/lt900048-ai24tn/models/new5558/tinyllama_1b-200000 \
-        --train_data_path ./example/sample_train_data.json \
-        --eval_data_path ./example/sample_eval_data.json \
+        --train_data_path /project/lt900047-ai24ta/boat/train_instruct_qa.jsonl \
+        --eval_data_path /project/lt900047-ai24ta/boat/val_instruct_qa.jsonl \
         --data_seed 42 \
         --model_max_length 2048 \
         --bf16 True \
