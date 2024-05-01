@@ -18,7 +18,7 @@ export WANDB_MODE="offline"
 # sent to sub script
 export HOSTNAMES=`scontrol show hostnames "$SLURM_JOB_NODELIST"`
 export MASTER_ADDR=$(scontrol show hostnames "$SLURM_JOB_NODELIST" | head -n 1)
-export MASTER_PORT=12802
+export MASTER_PORT=$(shuf -i 0-65535 -n 1)
 export COUNT_NODE=`scontrol show hostnames "$SLURM_JOB_NODELIST" | wc -l`
 
 echo go $COUNT_NODE

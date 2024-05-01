@@ -34,6 +34,7 @@ apptainer exec --nv \
     -B ${PWD}/deepspeed_config:/app/deepspeed_config \
     -B ${PWD}/scripts:/app/scripts \
     -B /project/lt900048-ai24tn/models:/project/lt900048-ai24tn/models \
+    -B /project/lt900048-ai24tn/datasets:/project/lt900048-ai24tn/datasets \
     ./llm-finetune.sif \
     accelerate launch \
         --num_processes $(( 4 * $COUNT_NODE )) \
